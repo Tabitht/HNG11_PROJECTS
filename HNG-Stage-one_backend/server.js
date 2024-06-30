@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const app = express();
 app.set('trust proxy', true);
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.get('/api/hello', async (req, res) => {
   const visitorName = req.query.visitor_name;
