@@ -6,7 +6,8 @@ app.set('trust proxy', true);
 const port = process.env.PORT || 3000;
 
 app.get('/api/hello', async (req, res) => {
-  const visitorName = req.query.visitor_name;
+  let visitorName = req.query.visitor_name;
+  visitorName = visitorName.replace(/^["']["']$/g, '');
   const clientIp = req.ip;
   const apiKey = process.env.API_KEY
 
