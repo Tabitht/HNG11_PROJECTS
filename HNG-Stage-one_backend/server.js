@@ -7,7 +7,9 @@ const port = process.env.PORT || 3000;
 
 app.get('/api/hello', async (req, res) => {
   let visitorName = req.query.visitor_name;
-  visitorName = visitorName.replace(/^["']["']$/g, '');
+  if (visitorName.startsWith('"') && visitorName.endsWith('"')){
+    visitorName = visitorName.slice(1, -1);
+    }
   const clientIp = req.ip;
   const apiKey = process.env.API_KEY
 
