@@ -17,10 +17,11 @@ async function authenticateuser(request, response, next) {
 
     try{
         const token = authorizationHeader.split(' ')[1];
-        const decodedToken = jwt.decode(token);
-        //console.log('Decoded Token:', decodedToken);
+
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         //console.log(decoded);
+        const decodedToken = jwt.decode(token);
+        //console.log('Decoded Token:', decodedToken);
 
         const user = await User.findOne({ where: { userId: decoded.userId } });
         console.log('User from DB:', user);
