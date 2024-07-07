@@ -8,7 +8,8 @@ const databaseUrl = process.env.DATABASE_URL;
 const sequelize = new Sequelize(databaseUrl, {
   host: process.env.DB_HOST,
   dialect: 'postgres',
-  dialectOptions:{
+});
+ /** dialectOptions:{
 	ssl: isProduction
 	  ? {
           require: true,
@@ -16,8 +17,8 @@ const sequelize = new Sequelize(databaseUrl, {
         }
 	: false,
   },
-  logging: false,
-});
+  logging: false,**/
+// });
 
 /**process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD,**/
 
