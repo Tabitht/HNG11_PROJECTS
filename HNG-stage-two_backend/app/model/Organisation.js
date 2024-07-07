@@ -5,7 +5,7 @@ const { ulid } = require('ulid');
 const Organisation = sequelize.define('Organisation', {
   orgId: {
     type: DataTypes.STRING,
-    defaultValue: DataTypes.ulid,
+    defaultValue: () => ulid(),
     primaryKey: true,
     unique: true,
   },

@@ -1,11 +1,14 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { addseconds, getTime } = require('date-fns');
-const { User, Organisation } = require('../model');
+const { addSeconds, getTime } = require('date-fns');
+//const path = require('path');
+//const { User, Organisation } = require(path.join(__dirname, '../model'));
+const { User, Organisation } = require('../Model/Users-and-Organisation');
 
 async function registerUser(userData) {
-    const existingUser = await User.findone({ where: { email: userData.email }})
+    const existingUser = await User.findOne({ where: { email: userData.email }})
     if (existingUser) {
+        console.log('user already exist');
         const error = new Error('Registration unsuccessful');
         error.status = 'Bad request';
         error.statusCode = 400;
@@ -25,9 +28,11 @@ async function registerUser(userData) {
     const organisationName = `${userData.firstName}'s Organisation`;
     const organisation = await Organisation.create({ name: organisationName });
 
-    await user.addOrganisation(organisation);
+    await user.addOrganisation(organisation).then(updated => {
+        console.log('organisation added', updated)});
+    
 
-    const expiryDate = addseconds(new Date(), process.env.JWT_TOKEN_EXPIRY);
+    const expiryDate = addSeconds(new Date(), process.env.JWT_TOKEN_EXPIRY);
 
     const token = jwt.sign(
         { userId: user.userId,
@@ -57,8 +62,9 @@ async function registerUser(userData) {
 }
 
 async function loginUser(email, password){
-    const user = await User.findone({ where: { email: email }});
+    const user = await User.findOne({ where: { email: email }});
     if(!user) {
+        console.log('User not found');
         const error = new Error('Authentication failed');
         error.status = 'Bad request';
         error.statusCode = 401;
@@ -67,13 +73,14 @@ async function loginUser(email, password){
     const matches = await bcrypt.compare(password, user.password);
     
     if(!matches) {
+        console.log('password does not match');
         const error = new Error('Authentication failed');
         error.status = 'Bad request';
         error.statusCode = 401;
         throw error;
     }
 
-    const expiryDate = addseconds(new Date(), process.env.JWT_TOKEN_EXPIRY);
+    const expiryDate = addSeconds(new Date(), process.env.JWT_TOKEN_EXPIRY);
 
     const token = jwt.sign(
         { userId: user.userId,

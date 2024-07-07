@@ -1,11 +1,12 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
 const { ulid } = require('ulid');
+const Organisation = require('./Organisation');
 
 const User = sequelize.define('User', {
   userId: {
     type: DataTypes.STRING,
-    defaultValue: ulid,
+    defaultValue: () => ulid(),
     primaryKey: true,
     unique: true,
   },
