@@ -5,7 +5,7 @@ dotenv.config();
 
 const databaseUrl = process.env.DATABASE_URL;
 
-const sequelize = new Sequelize(databaseUrl{
+const sequelize = new Sequelize(databaseUrl, {
   host: process.env.DB_HOST,
   dialect: 'postgres',
   dialectOptions:{
