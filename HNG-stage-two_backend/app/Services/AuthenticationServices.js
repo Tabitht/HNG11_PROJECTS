@@ -6,7 +6,7 @@ const { addSeconds, getTime } = require('date-fns');
 const { User, Organisation } = require('../Model/Users-and-Organisation');
 
 async function registerUser(userData) {
-    const existingUser = await User.findOne({ where: { email: userData.email }})
+    const existingUser = await User.findOne({ email: userData.email })
     if (existingUser) {
         console.log('user already exist');
         const error = new Error('Registration unsuccessful');
