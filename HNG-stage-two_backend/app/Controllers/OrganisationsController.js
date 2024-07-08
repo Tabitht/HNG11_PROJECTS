@@ -2,7 +2,7 @@ const services = require('../Services/OrganisationServices');
 
 async function getUser(request, response) {
     try{
-        const results = await services.getUserOrganisation(request.params, req.user);
+        const results = await services.getUserOrganisation(request.params, request.user);
         response.status(200).json(results)
     } catch (error) {
         console.error('error fetching user:', error);
@@ -60,10 +60,10 @@ async function createOrg(request, response) {
         const results = await services.createOrganisation(request.body, request.user);
         response.status(201).json(results)
     } catch (error) {
-        response.status(500).json({
-            status: error.staus,
-            message: error.message,
-            statusCode: 500
+        response.status(400).json({
+            status: error.status || 'Bad Request',
+            message: error.message || 'Client error',
+            statusCode: 400
         });
     };
 }

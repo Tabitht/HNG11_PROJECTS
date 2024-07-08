@@ -5,14 +5,14 @@ const { User, Organisation } = require('../Model/Users-and-Organisation');
 
 async function getUserOrganisation(userID, loginId) {
     console.log(userID);
-    if (loginId.userId !== userID) {
-        console.log('user not found');
+    if (loginId.userId !== userID.userId) {
+        console.log('First check: user not found');
         const error = new Error('You can only access your own data');
         error.statusCode = 403;
         throw error;
     }
 
-    const userData = await User.findByPk(userID, {
+    const userData = await User.findByPk(userID.userId, {
       attributes: ['userId', 'firstName', 'lastName', 'email', 'phone'],
       include: {
         model: Organisation,
@@ -21,7 +21,7 @@ async function getUserOrganisation(userID, loginId) {
     });
 
     if (!userData) {
-      console.log('user not found');
+      console.log('Second check: user not found');
         const error = new Error('You can only access your own data');
         error.statusCode = 404;
         throw error;
@@ -42,7 +42,7 @@ async function getAllOrganisation(user) {
         include: {
             model: User,
             where: { userId: user.userId },
-            attributes: ['userId', 'firstName', 'lastName']
+            attributes: []
     },
     attributes: ['orgId', 'name', 'description']
     });
@@ -57,12 +57,14 @@ async function getAllOrganisation(user) {
 }
 
 async function getOneOrganisation(user, orgId) {
+    console.log(user);
+    console.log(orgId);
     const organisation = await Organisation.findOne({
         where: { orgId },
         include: {
             model: User,
             where: { userId: user.userId },
-            attributes: ['userId', 'firstName', 'lastName'],
+            attributes: [],
       },
       attributes: ['orgId', 'name', 'description']
     });
@@ -114,7 +116,7 @@ async function addUser(orgId, userId) {
 async function createOrganisation(orgData, user) {
 
     if (!orgData.name) {
-      const error = new Error('Name is required');
+      const error = new Error('Client error');
       error.statusCode = 400
         throw error
       }

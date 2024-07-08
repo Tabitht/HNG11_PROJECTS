@@ -15,34 +15,30 @@ async function authenticateuser(request, response, next) {
         });
     }
 
-  // try{
+   try{
         const token = authorizationHeader.split(' ')[1];
-
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        //console.log(decoded);
-        const decodedToken = jwt.decode(token);
-        //console.log('Decoded Token:', decodedToken);
 
         const user = await User.findOne({ where: { userId: decoded.userId } });
         console.log('User from DB:', user);
 
         if (!user) {
       console.error('User not found for ID:', decoded.userId);
-      return res.status(401).json({
+      return response.status(401).json({
         status: 'fail',
         message: 'Unauthorized: user not found',
         statusCode: 401,
       });
     }
 
-    req.user = user;
+    request.user = user;
     next();
-    //} catch (error) {
-    // response.status(401).json({
-     // status: 'fail',
-   //   message: 'Unauthorized: invalid token',
-    //  statusCode: 401,
-   // });
-    //}
+    } catch (error) {
+     response.status(401).json({
+      status: 'fail',
+      message: 'Unauthorized: invalid token',
+      statusCode: 401,
+    });
+    }
 }
 module.exports = authenticateuser;
