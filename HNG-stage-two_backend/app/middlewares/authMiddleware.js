@@ -15,7 +15,7 @@ async function authenticateuser(request, response, next) {
         });
     }
 
-    try{
+  // try{
         const token = authorizationHeader.split(' ')[1];
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -37,12 +37,12 @@ async function authenticateuser(request, response, next) {
 
     req.user = user;
     next();
-    } catch (error) {
-    response.status(401).json({
-      status: 'fail',
-      message: 'Unauthorized: invalid token',
-      statusCode: 401,
-    });
-    }
+    //} catch (error) {
+    // response.status(401).json({
+     // status: 'fail',
+   //   message: 'Unauthorized: invalid token',
+    //  statusCode: 401,
+   // });
+    //}
 }
 module.exports = authenticateuser;
