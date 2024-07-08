@@ -5,23 +5,24 @@ const { User, Organisation } = require('../Model/Users-and-Organisation');
 
 async function getUserOrganisation(userID, loginId) {
     console.log(userID);
-    if (loginId.userId !== userID.userId) {
-        console.log('First check: user not found');
+    console.log(loginId.userId);
+    if (loginId.userId !== userID) {
+        console.log('user not found');
         const error = new Error('You can only access your own data');
         error.statusCode = 403;
         throw error;
     }
 
-    const userData = await User.findByPk(userID.userId, {
+    const userData = await User.findByPk(userID, {
       attributes: ['userId', 'firstName', 'lastName', 'email', 'phone'],
       include: {
         model: Organisation,
-        attributes: ['orgId', 'name', 'description'],
+        attributes: [],
       }
     });
 
     if (!userData) {
-      console.log('Second check: user not found');
+      console.log('user not found');
         const error = new Error('You can only access your own data');
         error.statusCode = 404;
         throw error;
@@ -57,7 +58,7 @@ async function getAllOrganisation(user) {
 }
 
 async function getOneOrganisation(user, orgId) {
-    console.log(user);
+    console.log(user.userId);
     console.log(orgId);
     const organisation = await Organisation.findOne({
         where: { orgId },

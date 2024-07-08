@@ -2,7 +2,7 @@ const services = require('../Services/OrganisationServices');
 
 async function getUser(request, response) {
     try{
-        const results = await services.getUserOrganisation(request.params, request.user);
+        const results = await services.getUserOrganisation(request.params.id, request.user);
         response.status(200).json(results)
     } catch (error) {
         console.error('error fetching user:', error);
@@ -30,7 +30,7 @@ async function getAll(request, response) {
 
 async function getOne(request, response) {
     try{
-        const results = await services.getOneOrganisation(request.user, req.params);
+        const results = await services.getOneOrganisation(request.user, request.params.orgId);
         response.status(200).json(results)
     } catch (error) {
         response.status(404).json({
@@ -43,11 +43,11 @@ async function getOne(request, response) {
 
 async function add(request, response) {
     try{
-        const results = await services.addUser(req.params, req.body);
+        const results = await services.addUser(request.params.orgId, request.body.userId);
         response.status(200).json(results)
     } catch (error) {
         console.error('Error adding user to organisation:', error);
-        response.status(error.statusCode).json({
+        response.status(400).json({
             status: 'fail',
             message: error.message,
             statusCode: 400

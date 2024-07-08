@@ -20,7 +20,7 @@ async function authenticateuser(request, response, next) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         const user = await User.findOne({ where: { userId: decoded.userId } });
-        console.log('User from DB:', user);
+        //console.log('User from DB:', user);
 
         if (!user) {
       console.error('User not found for ID:', decoded.userId);
